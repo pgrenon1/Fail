@@ -23,6 +23,8 @@ public class PlayerManager : OdinSerializedSingletonBehaviour<PlayerManager>
 
     public void TeleportToSpawnPoint()
     {
+        Player.Rigidbody.velocity = Vector3.zero;
+
         var spawnPoint = GetSpawnPoint();
         if (spawnPoint != null)
         {
@@ -79,6 +81,14 @@ public class PlayerManager : OdinSerializedSingletonBehaviour<PlayerManager>
 
     public void ResetPlayer()
     {
+        Player.PlayDeathFeedback();
+
+        TogglePlayerActive(false);
+
         TeleportToSpawnPoint();
+
+        Player.ResetCamera();
+
+        TogglePlayerActive(true);
     }
 }

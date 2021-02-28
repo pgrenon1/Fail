@@ -58,6 +58,9 @@ public class LevelManager : OdinSerializedSingletonBehaviour<LevelManager>
         // Disable Player's Inputs
         InputManager.Instance.GameInputs.PlayerActions.Disable();
 
+        PlayerManager.Instance.Player.PlayDeathFeedback();
+        PlayerManager.Instance.Player.Rigidbody.isKinematic = true;
+
         StartCoroutine(DoLevelEndSequence(levelEndCondition));
     }
 

@@ -22,4 +22,4 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   bootstrapScenePath: Assets/Scenes/Bootstrap.unity
-  gameMenuScenePath: 
+  gameMenuScenePath: Assets/Scenes/GameMenu.unity

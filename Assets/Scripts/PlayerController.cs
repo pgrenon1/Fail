@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Cinemachine;
+using System;
+using System.Collections;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -12,9 +14,19 @@ public class PlayerController : MonoBehaviour
     [Header("Jump")]
     public float extraDistanceToGround = 0.1f;
     public float jumpInputStickyTime = 0.3f;
-    public float jumpForce = 10f;
     public ForceMode jumpForceMode;
+    public float counterJumpForce = 1f;
+    public ForceMode counterJumpForceMode;
+    public float jumpHeight = 5f;
     public float gravity = -9.81f;
+    public bool doubleJump = true;
+
+    [Header("Feedbacks")]
+    public GameObject visualsParent;
+    public Sound jumpSFX;
+    public Sound deathSFX;
+    public ParticleSystem deathVFX;
+    public ParticleSystem landingVFX;
 
     [Header("Pickup")]
     public float pickupDistance;
@@ -25,83 +37,110 @@ public class PlayerController : MonoBehaviour
     public GameInputs GameInputs { get { return InputManager.Instance.GameInputs; } }
     //public Pickupable HoveredPickupable { get; private set; }
     //public Pickupable PickedUpPickupable { get; set; }
+    public Rigidbody Rigidbody { get; private set; }
+    public CinemachineFreeLook CinemachineFreeLook { get; private set; }
+    public CinemachineVirtualCamera CinemachineVirtualCamera { get; private set; }
 
     private CapsuleCollider _capsuleCollider;
     private Vector2 _moveAxis;
     private Vector2 _lookAxis;
-    private Rigidbody _rigidbody;
     private Vector3 _pickupableVelocity;
     private Vector3 _flatDirection;
+
     private Vector3 _pickedUpTargetOriginalOffset;
     private Vector3 _groundNormal;
     private Vector3 _targetEulers;
     private bool _hasRequestedJump;
     private float _jumpInputStickyTimer;
-    private bool _isGrounded;
+    private Vector3 _initialFreeLookPosition;
+    private bool _isJumpInputHeld;
+    private bool _isjumping;
+    private Vector2 _counterJumpForceVector;
+    private Vector3 _targetVelocity;
+
+    private bool _isGrounded = false;
+    private bool IsGrounded
+    {
+        get { return _isGrounded; }
+        set
+        {
+            if (value != _isGrounded && value)
+            {
+                if (landingVFX)
+                    landingVFX.Play();
+
+                _isjumping = false;
+                _hasDoubleJumped = false;
+            }
+
+            _isGrounded = value;
+        }
+    }
+    private bool _hasDoubleJumped;
 
     private void Awake()
     {
         _capsuleCollider = GetComponentInChildren<CapsuleCollider>();
-        _rigidbody = GetComponentInChildren<Rigidbody>();
-        //_pickedUpTargetOriginalOffset = pickedUpTargetTransform.localPosition;
+        Rigidbody = GetComponentInChildren<Rigidbody>();
+        CinemachineFreeLook = GetComponentInChildren<CinemachineFreeLook>();
+        CinemachineVirtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
+    }
+
+    public void GetInitialFreeLookValues()
+    {
+        _initialFreeLookPosition = CinemachineFreeLook.transform.position;
     }
 
     private void Start()
     {
-        GameInputs.PlayerActions.Look.performed += ctx => HandleLook(GameInputs.PlayerActions.Look.ReadValue<Vector2>());
-        GameInputs.PlayerActions.Jump.performed += ctx => RequestJump();
+        GameInputs.PlayerActions.Jump.started += ctx => ToggleJumpInput(true);
+        GameInputs.PlayerActions.Jump.canceled += ctx => ToggleJumpInput(false);
     }
 
-    //private void HandlePickup()
-    //{
-    //    if (PickedUpPickupable != null)
-    //    {
-    //        Drop();
-    //    }
-    //    else
-    //    {
-    //        TryPickup();
-    //    }
-    //}
+    private void ToggleJumpInput(bool jumping)
+    {
+        _isJumpInputHeld = jumping;
 
-    //private void TryPickup()
-    //{
-    //    if (HoveredPickupable != null)
-    //    {
-    //        Pickup(HoveredPickupable);
-    //    }
-    //}
+        if (_isJumpInputHeld)
+        {
+            RequestJump();
+        }
+    }
 
     private void Update()
     {
         UpdateMovementInput();
 
-        //UpdateHoveredPickupable();
-
-        //UpdatePickedUpTarget();
-
         UpdateIsGrounded();
 
-        //UpdateRotation();
-
-        UpdateGravity();
     }
 
     private void FixedUpdate()
     {
         FixedUpdateMovement();
 
-        FixedUpdateJumpInput();
+        FixedUpdateJump();
 
-        FixedUpdateRotation();
+        FixedUpdateGravity();
     }
 
-    private void UpdateGravity()
+    private void FixedUpdateGravity()
     {
-        _rigidbody.AddForce(new Vector3(0, gravity * _rigidbody.mass, 0));
+        var velocity = Rigidbody.velocity;
+        if (_isjumping)
+        {
+            if (!_isJumpInputHeld /*&& Vector2.Dot(Rigidbody.velocity, Vector2.up) > 0f*/)
+            {
+                velocity = velocity + new Vector3(0f, -counterJumpForce * Rigidbody.mass * Time.deltaTime, 0f);
+            }
+        }
+
+        velocity = velocity + new Vector3(0, gravity * Rigidbody.mass, 0);  
+
+        Rigidbody.velocity = velocity;
     }
 
-    private void FixedUpdateJumpInput()
+    private void FixedUpdateJump()
     {
         if (_hasRequestedJump)
         {
@@ -117,13 +156,31 @@ public class PlayerController : MonoBehaviour
 
     private void TryJump()
     {
-        if (_isGrounded)
+        if (IsGrounded)
         {
-            _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, 0f, _rigidbody.velocity.z);
-            _rigidbody.AddForce(Vector3.up * jumpForce, jumpForceMode);
-
-            _hasRequestedJump = false;
+            Jump();
         }
+        else if (doubleJump && !_hasDoubleJumped)
+        {
+            _hasDoubleJumped = true;
+
+            Jump();
+        }
+    }
+
+    private void Jump()
+    {
+        _isjumping = true;
+
+        if (jumpSFX)
+            jumpSFX.Play(true);
+
+        var jumpForce = CalculateJumpForce(gravity, jumpHeight);
+
+        Rigidbody.velocity = new Vector3(Rigidbody.velocity.x, 0f, Rigidbody.velocity.z);
+        Rigidbody.AddForce(Vector2.up * jumpForce * Rigidbody.mass, jumpForceMode);
+
+        _hasRequestedJump = false;
     }
 
     private void RequestJump()
@@ -132,69 +189,26 @@ public class PlayerController : MonoBehaviour
         _jumpInputStickyTimer = 0;
     }
 
+    private float CalculateJumpForce(float gravityStrength, float jumpHeight)
+    {
+        //h = v^2/2g
+        //2gh = v^2
+        //sqrt(2gh) = v
+        return Mathf.Sqrt(2 * Mathf.Abs(gravityStrength) * jumpHeight);
+    }
+
     private void UpdateIsGrounded()
     {
         Ray ray = new Ray(transform.position, Vector3.down);
-        _isGrounded = Physics.SphereCast(ray, _capsuleCollider.radius, _capsuleCollider.height / 2f + extraDistanceToGround, LayerMaskManager.Instance.groundLayerMask);
-    }
-
-    //private void UpdateHoveredPickupable()
-    //{
-    //    var clostestPickupableInCone = Util.GetComponentInCone<Pickupable>(transform.position, transform.forward, pickupDistance, pickupAngle, ~0);
-    //    if (clostestPickupableInCone != null && PickedUpPickupable == null)
-    //    {
-    //        HoveredPickupable = clostestPickupableInCone;
-    //    }
-    //    else
-    //    {
-    //        HoveredPickupable = null;
-    //    }
-    //}
-
-    //private void Pickup(Pickupable pickupable)
-    //{
-    //    PickedUpPickupable = pickupable;
-    //    PickedUpPickupable.PickUp();
-    //}
-
-    //private void Drop()
-    //{
-    //    PickedUpPickupable.Drop();
-    //    PickedUpPickupable = null;
-    //}
-
-
-    //private void UpdatePickedUpTarget()
-    //{
-    //    var targetPosition = transform.position + _pickedUpTargetOriginalOffset;
-
-    //    //var groundNormal = Util.GetGroundNormalAtPosition(targetPosition);
-
-    //    pickedUpTargetTransform.position = Vector3.Lerp(pickedUpTargetTransform.position, targetPosition, 0.8f);
-    //}
-
-    private void FixedUpdateRotation()
-    {
-        if (_flatDirection.magnitude > 0f)
-        {
-            _targetEulers = _flatDirection;
-            ApplyCurrentEuler();
-        }
-
-        //_targetEulers = Vector3.ProjectOnPlane(_targetEulers, _groundNormal);
-    }
-
-    private void ApplyCurrentEuler()
-    {
-        transform.rotation = Quaternion.LookRotation(_targetEulers);
+        IsGrounded = Physics.SphereCast(ray, _capsuleCollider.radius, _capsuleCollider.height / 2f + extraDistanceToGround, LayerMaskManager.Instance.groundLayerMask);
     }
 
     private void FixedUpdateMovement()
     {
         var scaledMovement = _flatDirection * moveSpeed * Time.fixedDeltaTime;
-        var targetPosition = transform.position + scaledMovement;
+        //var targetPosition = transform.position + scaledMovement;
 
-        _rigidbody.AddForce(scaledMovement, moveForceMode);
+        Rigidbody.AddForce(scaledMovement, moveForceMode);
     }
 
     private Vector3 GetFlatDirectionWithCamera(Vector3 direction)
@@ -212,11 +226,6 @@ public class PlayerController : MonoBehaviour
         DebugExtension.DebugArrow(transform.position, _flatDirection.normalized * 5f, debugMoveColor, 0.2f);
     }
 
-    private void HandleLook(Vector2 lookAxis)
-    {
-        _lookAxis = lookAxis;
-    }
-
     public Vector3 DirectionFromAngle(float angleInDegrees, bool angleIsGlobal)
     {
         if (!angleIsGlobal)
@@ -225,6 +234,21 @@ public class PlayerController : MonoBehaviour
         }
 
         return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
+    }
+
+    public void ResetCamera()
+    {
+        CinemachineFreeLook.transform.position = _initialFreeLookPosition;
+    }
+
+    public void PlayDeathFeedback()
+    {
+        visualsParent.SetActive(false);
+
+        deathSFX.Play(true, true);
+
+        deathVFX.transform.rotation = Quaternion.LookRotation(Rigidbody.velocity);
+        deathVFX.Play();
     }
 
     private void OnDrawGizmos()
@@ -239,7 +263,7 @@ public class PlayerController : MonoBehaviour
         //Gizmos.DrawWireSphere(pickedUpTargetTransform.position, 0.5f);
 
         Gizmos.color = Color.green;
-        if (!_isGrounded)
+        if (!IsGrounded)
             Gizmos.color = Color.red;
 
         Gizmos.DrawWireSphere(transform.position + Vector3.down * extraDistanceToGround, _capsuleCollider.radius);

@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class AudioManager : OdinSerializedSingletonBehaviour<AudioManager>
 {
-    public AudioSource sfxPrefab;
+    public Sound sfxPrefab;
 
     public void PlaySFX(AudioClip clip, Vector3 position)
     {
         if (!clip)
             return;
 
-        var audioSource = Instantiate(sfxPrefab, position, Quaternion.identity);
+        Sound sound = Instantiate(sfxPrefab, position, Quaternion.identity);
 
-        audioSource.clip = clip;
-        audioSource.Play();
+        sound.AudioSource.clip = clip;
+        sound.Play();
 
-        Destroy(audioSource.gameObject, audioSource.clip.length);
+        Destroy(sound.gameObject, clip.length);
     }
 }

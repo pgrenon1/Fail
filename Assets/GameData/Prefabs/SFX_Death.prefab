@@ -9,9 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1087095793814875343}
+  - component: {fileID: 6815986287011495659}
   - component: {fileID: 1087095793814875342}
   m_Layer: 0
-  m_Name: SFX
+  m_Name: SFX_Death
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,6 +32,47 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6815986287011495659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1087095793814875341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9f9e8e14f59e3f45ab67df1821da290, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pitchMinMax: {x: 0.6212733, y: 1.4335213}
+  clips:
+  - {fileID: 8300000, guid: 2f8504e9753ff24479c3a2dc1af42d5c, type: 3}
+  - {fileID: 8300000, guid: ee21f9266beccaa4a98ded81d757a183, type: 3}
+  - {fileID: 8300000, guid: aac98df1ddcda7e4c85abf577eca51a0, type: 3}
+  - {fileID: 8300000, guid: d5fe1ce00f9d77a40bbb80610b846e0f, type: 3}
+  - {fileID: 8300000, guid: 47d7881006fe1354b86c65257bc823f4, type: 3}
+  - {fileID: 8300000, guid: 39eb7dcc94fea12429d789cd0cb19fcd, type: 3}
+  - {fileID: 8300000, guid: d5ba834d2f6ae9a4a95318a2ace27059, type: 3}
+  - {fileID: 8300000, guid: cecac796c2469f34e819353a8b626bb1, type: 3}
+  - {fileID: 8300000, guid: 01b0431e114739f4db6d9b2917e7f348, type: 3}
+  - {fileID: 8300000, guid: ebe3aec1290ea03409f7485a4a95479c, type: 3}
+  - {fileID: 8300000, guid: 30e9bbd152dc2fb44a03fd237be2d03d, type: 3}
+  - {fileID: 8300000, guid: 5b25740178b04b74cba638a23a914c9e, type: 3}
+  - {fileID: 8300000, guid: 8f220e69e38423e40b080cc52831df33, type: 3}
+  - {fileID: 8300000, guid: 9d77df58b5523554f9d1c5b153663edd, type: 3}
+  - {fileID: 8300000, guid: caa0cd2f793ee644382696c162be3f13, type: 3}
+  - {fileID: 8300000, guid: 42933d24a2e3daf438861558bf5dcda7, type: 3}
+  - {fileID: 8300000, guid: ad99799ade8c7a1409f28ea4362a326c, type: 3}
+  - {fileID: 8300000, guid: 90cd3b6ff44e1564ca0201de0da46949, type: 3}
+  - {fileID: 8300000, guid: 077a42e7bc0db1e4a97c87a99b76885c, type: 3}
+  - {fileID: 8300000, guid: 60131e1d84223d14db5fe3e159dd8a17, type: 3}
+  - {fileID: 8300000, guid: 946d34ada4d1e604099398f513204203, type: 3}
+  - {fileID: 8300000, guid: b6eb8d7a0afbaa345aebe887afc674b5, type: 3}
+  - {fileID: 8300000, guid: dd1d06d7ce6c9a24b90c0e352640ffc7, type: 3}
+  - {fileID: 8300000, guid: 342fa7f34c2b8b247aa74aaa8dd213d6, type: 3}
+  - {fileID: 8300000, guid: 75d5432cd34460648a9a672ae51b2ff3, type: 3}
+  - {fileID: 8300000, guid: ae4d4922727d7a04ebfee2d07a52403f, type: 3}
+  - {fileID: 8300000, guid: fd833b0f31f3eb843a658ee6588c536c, type: 3}
 --- !u!82 &1087095793814875342
 AudioSource:
   m_ObjectHideFlags: 0
@@ -41,7 +83,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 2f8504e9753ff24479c3a2dc1af42d5c, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1

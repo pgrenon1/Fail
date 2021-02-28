@@ -5,9 +5,22 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public static class Extensions 
 {
+    public static T GetRandomElement<T>(this List<T> list, bool removeFromList = false)
+    {
+        var index = Random.Range(0, list.Count);
+
+        var element = list[index];
+
+        if (removeFromList)
+            list.RemoveAt(index);
+
+        return element;
+    }
+
     public static void AddUnique<T>(this List<T> list, T element)
     {
         if (list.Contains(element))
