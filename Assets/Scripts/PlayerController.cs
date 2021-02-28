@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Movement")]
     public float moveSpeed;
+    public float airControlFactor;
     public ForceMode moveForceMode;
     public float rotationSpeed;
     public Color debugMoveColor;
@@ -208,6 +209,10 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdateMovement()
     {
         var scaledMovement = _flatDirection * moveSpeed * Time.fixedDeltaTime;
+
+        if (!IsGrounded)
+            scaledMovement = scaledMovement * airControlFactor;
+
         //var targetPosition = transform.position + scaledMovement;
 
         Rigidbody.AddForce(scaledMovement, moveForceMode);
@@ -245,8 +250,6 @@ public class PlayerController : MonoBehaviour
 
     public void PlayDeathFeedback(Quaternion rotation)
     {
-        visualsParent.SetActive(false);
-
         deathSFX.Play(true, true);
 
         deathVFX.transform.rotation = rotation;
