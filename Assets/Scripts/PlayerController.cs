@@ -126,6 +126,8 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdateGravity()
     {
+        Rigidbody.AddForce(new Vector3(0, gravity * Rigidbody.mass, 0));
+
         var velocity = Rigidbody.velocity;
         if (_isjumping)
         {
@@ -135,7 +137,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        velocity = velocity + new Vector3(0, gravity * Rigidbody.mass, 0);  
+        //velocity = velocity + new Vector3(0, gravity * Rigidbody.mass, 0);
 
         Rigidbody.velocity = velocity;
     }
@@ -241,13 +243,13 @@ public class PlayerController : MonoBehaviour
         CinemachineFreeLook.transform.position = _initialFreeLookPosition;
     }
 
-    public void PlayDeathFeedback()
+    public void PlayDeathFeedback(Quaternion rotation)
     {
         visualsParent.SetActive(false);
 
         deathSFX.Play(true, true);
 
-        deathVFX.transform.rotation = Quaternion.LookRotation(Rigidbody.velocity);
+        deathVFX.transform.rotation = rotation;
         deathVFX.Play();
     }
 
