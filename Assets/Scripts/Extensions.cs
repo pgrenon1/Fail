@@ -1,9 +1,10 @@
 ﻿using Sirenix.Utilities;
-using System;
 using System.Collections.Generic;
 using System.IO;
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.SceneManagement;
+#endif
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -11,6 +12,11 @@ using Random = UnityEngine.Random;
 
 public static class Extensions 
 {
+    public static float Remap(this float value, float from1, float to1, float from2, float to2)
+    {
+        return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
+    }
+
     public static T GetRandomElement<T>(this List<T> list, bool removeFromList = false)
     {
         var index = Random.Range(0, list.Count);
@@ -96,6 +102,7 @@ public static class Extensions
 
 public static class Utils
 {
+#if UNITY_EDITOR
     [MenuItem("Fail/Clear Save Data")]
     public static void ClearSaveData()
     {
@@ -106,6 +113,7 @@ public static class Utils
             File.Delete(filePath);
         }
     }
+#endif
 
     public static bool IsPlayerGameObject(GameObject gameObject)
     {
@@ -240,21 +248,17 @@ public static class Utils
 
         return false;
     }
-
+#if UNITY_EDITOR
     public static void LoadSceneEditor(string path, OpenSceneMode mode)
     {
         var scene = EditorSceneManager.OpenScene(path, mode);
-        SceneManager.SetActiveScene(scene);
+        EditorSceneManager.SetActiveScene(scene);
     }
 
     public static int GetIndexOfLoadedScene(int sceneBuildIndex)
     {
         var sceneCount = 0;
-#if UNITY_EDITOR
         sceneCount = EditorSceneManager.sceneCount;
-#else
-		sceneCount = SceneManager.SceneCount;
-#endif
         for (int i = 0; i < sceneCount; i++)
         {
             var scene = SceneManager.GetSceneAt(i);
@@ -264,4 +268,5 @@ public static class Utils
 
         return -1;
     }
+#endif
 }

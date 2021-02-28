@@ -88,5 +88,8 @@ public class PlayerManager : OdinSerializedSingletonBehaviour<PlayerManager>
         Player.ResetCamera();
 
         TogglePlayerActive(true);
+
+        Player.Rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+        Player.visualsParent.SetActive(true);
     }
 }

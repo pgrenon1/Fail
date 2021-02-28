@@ -28,6 +28,9 @@ public class PlayerController : MonoBehaviour
     public Sound deathSFX;
     public ParticleSystem deathVFXPrefab;
     public ParticleSystem landingVFX;
+    public Animator animator;
+    public float runBlendSpeed = 1f;
+    public Transform pivot;
 
     [Header("Pickup")]
     public float pickupDistance;
@@ -58,6 +61,9 @@ public class PlayerController : MonoBehaviour
     private bool _isjumping;
     private Vector2 _counterJumpForceVector;
     private Vector3 _targetVelocity;
+    private float _targetRunDirection;
+    private Vector3 _lerpedDirection;
+    private bool _isMoving;
 
     private bool _isGrounded = false;
     private bool IsGrounded
@@ -114,6 +120,7 @@ public class PlayerController : MonoBehaviour
 
         UpdateIsGrounded();
 
+        UpdateAnimationValues();
     }
 
     private void FixedUpdate()
@@ -228,9 +235,23 @@ public class PlayerController : MonoBehaviour
     private void UpdateMovementInput()
     {
         _moveAxis = GameInputs.PlayerActions.Move.ReadValue<Vector2>();
+        _isMoving = _moveAxis.sqrMagnitude > float.Epsilon;
         _flatDirection = GetFlatDirectionWithCamera(new Vector3(_moveAxis.x, 0, _moveAxis.y));
 
         DebugExtension.DebugArrow(transform.position, _flatDirection.normalized * 5f, debugMoveColor, 0.2f);
+    }
+
+    private void UpdateAnimationValues()
+    {
+        _lerpedDirection = Vector3.Lerp(_lerpedDirection, _flatDirection.normalized, runBlendSpeed * Time.deltaTime);
+
+        if (_flatDirection.sqrMagnitude > float.Epsilon)
+            pivot.rotation = Quaternion.LookRotation(_lerpedDirection);
+
+        DebugExtension.DebugArrow(transform.position, _lerpedDirection * 5f, Color.green, 0.2f);
+
+        animator.SetFloat("MoveX", _lerpedDirection.x);
+        animator.SetFloat("MoveZ", _lerpedDirection.z);
     }
 
     public Vector3 DirectionFromAngle(float angleInDegrees, bool angleIsGlobal)
@@ -250,6 +271,8 @@ public class PlayerController : MonoBehaviour
 
     public void PlayDeathFeedback()
     {
+        visualsParent.SetActive(false);
+
         deathSFX.Play(true, true);
 
         if (deathVFXPrefab)

@@ -1,4 +1,5 @@
-﻿using Sirenix.OdinInspector;
+﻿using Cinemachine;
+using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -6,6 +7,9 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : OdinSerializedSingletonBehaviour<LevelManager>
 {
+    public float levelRestartShotDuration = 0.5f;
+    public float levelRestartTrackDuration = 2f;
+
     public LevelEndScreen levelEndScreen;
     public float levelEndShotDuration = 2f;
     public float levelEndScreenDuration = 2f;
@@ -15,6 +19,9 @@ public class LevelManager : OdinSerializedSingletonBehaviour<LevelManager>
     public float Timer { get; private set; }
 
     private bool _timerIsStarted = false;
+
+    public delegate void OnLevelStartOrRestart();
+    public event OnLevelStartOrRestart OnLevelStartedOrRestarted;
 
     protected override void Awake()
     {
@@ -122,6 +129,9 @@ public class LevelManager : OdinSerializedSingletonBehaviour<LevelManager>
 
         yield return StartCoroutine(GameManager.Instance.DoHideLoadingScreen());
 
+        if (OnLevelStartedOrRestarted != null)
+            OnLevelStartedOrRestarted();
+
         CurrentLevel.StartLevel();
 
         InputManager.Instance.GameInputs.PlayerActions.Enable();
@@ -132,9 +142,39 @@ public class LevelManager : OdinSerializedSingletonBehaviour<LevelManager>
 
     public void RestartLevel()
     {
-        ResetTimer();
+        StopTimer();
+        //ResetTimer();
+
+        StartCoroutine(DoRestartLevelSequence());
+        //PlayerManager.Instance.ResetPlayer();
+    }
+
+    private IEnumerator DoRestartLevelSequence()
+    {
+        yield return new WaitForSeconds(levelRestartShotDuration);
+
+        var trackedDolly = CurrentLevel.dollyVCam.GetCinemachineComponent<CinemachineTrackedDolly>();
+        CurrentLevel.dollyVCam.Priority = 11;
+        var t = levelRestartTrackDuration;
+        while (t >= 0f)
+        {
+            var ratio = t.Remap(levelRestartTrackDuration, 0f, trackedDolly.m_Path.MaxPos, trackedDolly.m_Path.MinPos);
+
+            trackedDolly.m_PathPosition = ratio;
+
+            t -= Time.deltaTime;
+            yield return null;
+        }
+
+        CurrentLevel.playerTracker.ClearTrack();
+        CurrentLevel.dollyVCam.Priority = 9;
 
         PlayerManager.Instance.ResetPlayer();
+
+        if (OnLevelStartedOrRestarted != null)
+            OnLevelStartedOrRestarted();
+
+        StartTimer();
     }
 
     public void EndLevel(LevelEndConditionRuntime levelEndCondition)
@@ -148,7 +188,7 @@ public class LevelManager : OdinSerializedSingletonBehaviour<LevelManager>
 
         PlayerManager.Instance.Player.visualsParent.SetActive(false);
         PlayerManager.Instance.Player.PlayDeathFeedback();
-        PlayerManager.Instance.Player.Rigidbody.isKinematic = true;
+        PlayerManager.Instance.Player.Rigidbody.constraints = RigidbodyConstraints.FreezeAll;
 
         StartCoroutine(DoLevelEndSequence(levelEndCondition));
     }

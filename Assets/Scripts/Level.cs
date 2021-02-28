@@ -1,8 +1,7 @@
-﻿using Sirenix.OdinInspector;
+﻿using Cinemachine;
+using Sirenix.OdinInspector;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public enum LevelType
@@ -14,6 +13,9 @@ public enum LevelType
 
 public class Level : OdinSerializedBehaviour
 {
+    public CinemachineVirtualCamera dollyVCam;
+    public PlayerTracker playerTracker;
+
     public List<LevelEndConditionData> levelEndConditionDatas = new List<LevelEndConditionData>();
 
     public List<LevelEndConditionRuntime> LevelEndConditions { get; private set; } = new List<LevelEndConditionRuntime>();

@@ -35,7 +35,7 @@ public class Obstacle : MonoBehaviour
         var player = PlayerManager.Instance.Player;
 
         player.PlayDeathFeedback();
-
+        player.Rigidbody.constraints = RigidbodyConstraints.FreezeAll;
         LevelManager.Instance.RestartLevel();
     }
 
