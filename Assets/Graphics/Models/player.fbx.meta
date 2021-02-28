@@ -27,6 +27,21 @@ ModelImporter:
   - first:
       74: -512320013847864616
     second: rig|Jump
+  - first:
+      74: -8187359023072621790
+    second: rig|rig|rig|Idle.001|rig|Idle.001
+  - first:
+      74: -4149156326661039656
+    second: rig|rig|rig|Jump|rig|Jump
+  - first:
+      74: 8602592266438661675
+    second: rig|rig|rig|Run|rig|Run
+  - first:
+      74: -1385440384274341791
+    second: rig|rig|rig|siderun_right.001|rig|siderun_right.001
+  - first:
+      74: -1158283928012140235
+    second: rig|rig|rig|siderunleft|rig|siderunleft
   externalObjects: {}
   materials:
     materialImportMode: 1

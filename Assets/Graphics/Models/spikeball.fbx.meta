@@ -2,8 +2,49 @@ fileFormatVersion: 2
 guid: 65c99a76b2d8dea4d947e1f9d05305ea
 ModelImporter:
   serializedVersion: 19301
-  internalIDToNameTable: []
-  externalObjects: {}
+  internalIDToNameTable:
+  - first:
+      74: 1375683020120594455
+    second: spikefloor|anvilAction
+  - first:
+      74: -5852798910166217849
+    second: spikefloor|barbed wireAction
+  - first:
+      74: -1540869193786479598
+    second: spikefloor|CylinderAction
+  - first:
+      74: 3859911713825697254
+    second: spikefloor|spikeballAction
+  - first:
+      74: 7992769897229318920
+    second: spikefloor|spikefloorAction
+  - first:
+      74: 5482376723611931918
+    second: spikeball|anvilAction
+  - first:
+      74: -1308622638754858371
+    second: spikeball|AnvilAction
+  - first:
+      74: 599014950944713940
+    second: spikeball|AnvilAction.001
+  - first:
+      74: -4202982604944927109
+    second: spikeball|barbed wireAction
+  - first:
+      74: 3242211222974860119
+    second: spikeball|CylinderAction
+  - first:
+      74: -4124323156607700177
+    second: spikeball|spikeballAction
+  - first:
+      74: -3733596154843430532
+    second: spikeball|spikefloorAction
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: No Name
+    second: {fileID: 2100000, guid: b7faa4c322a20f04b80d7d66a892d152, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0

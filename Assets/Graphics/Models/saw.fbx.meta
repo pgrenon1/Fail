@@ -2,13 +2,33 @@ fileFormatVersion: 2
 guid: e05ad8cc2e73af24dba10573ee0eaed1
 ModelImporter:
   serializedVersion: 19301
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      74: -5827612316804769217
+    second: Cylinder|anvilAction
+  - first:
+      74: -4292064599624154132
+    second: Cylinder|barbed wireAction
+  - first:
+      74: -88723805440604879
+    second: Cylinder|CylinderAction
+  - first:
+      74: -215099215503697956
+    second: Cylinder|spikeballAction
+  - first:
+      74: 1151956058250204781
+    second: Cylinder|spikefloorAction
   externalObjects:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: No Name
     second: {fileID: 2100000, guid: 5a26de236ce89e94b963be8fa2b7ade6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Sawblade
+    second: {fileID: 2100000, guid: 9148778b65f88d548bdb72c34146b87d, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0

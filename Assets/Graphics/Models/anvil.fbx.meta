@@ -2,8 +2,36 @@ fileFormatVersion: 2
 guid: f6d35f1fcae64da428e7a21fe22a7b00
 ModelImporter:
   serializedVersion: 19301
-  internalIDToNameTable: []
-  externalObjects: {}
+  internalIDToNameTable:
+  - first:
+      74: 5989404992775978937
+    second: anvil|anvilAction
+  - first:
+      74: 6185950364502755204
+    second: anvil|AnvilAction
+  - first:
+      74: 2554834098538542564
+    second: anvil|barbed wireAction
+  - first:
+      74: 942087259515562254
+    second: anvil|CylinderAction
+  - first:
+      74: 4951925273576436967
+    second: anvil|spikeballAction
+  - first:
+      74: 4401544158044933728
+    second: anvil|spikefloorAction
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Anvil
+    second: {fileID: 2100000, guid: 5863fefe0ec0dd74186ad7ffcb6df4f6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: No Name
+    second: {instanceID: 0}
   materials:
     materialImportMode: 1
     materialName: 0
