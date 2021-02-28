@@ -252,7 +252,7 @@ MonoBehaviour:
   jumpHeight: 15
   gravity: -13.81
   doubleJump: 1
-  visualsParent: {fileID: 1826236676707715173}
+  visualsParent: {fileID: 4494333248050791648}
   jumpSFX: {fileID: 2398061431629049743}
   deathSFX: {fileID: 6354541113775228873}
   deathVFX: {fileID: 6690713794303000688}
@@ -604,7 +604,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4494333247208462237}
-  m_LocalRotation: {x: 0.18706499, y: 0.000000008451323, z: -0.0000000016093556, w: 0.98234755}
+  m_LocalRotation: {x: 0.18706499, y: -0.000000008451324, z: 0.0000000016093558, w: 0.98234755}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -680,7 +680,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4494333247552500856}
-  m_LocalRotation: {x: 0.18706499, y: 0.000000008451323, z: -0.0000000016093559, w: 0.98234755}
+  m_LocalRotation: {x: 0.18706499, y: -0.000000008451324, z: 0.0000000016093561, w: 0.98234755}
   m_LocalPosition: {x: 0, y: 4.56, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
