@@ -190,6 +190,8 @@ public class GameManager : OdinSerializedSingletonBehaviour<GameManager>
         // show loading screen
         yield return StartCoroutine(DoShowLoadingScreen());
 
+        LevelManager.Instance.levelEndScreen.Hide(null);
+
         PlayerManager.Instance.DestroyPlayer();
 
         // if we have a level to unload, unload it

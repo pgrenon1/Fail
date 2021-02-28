@@ -30,9 +30,11 @@ public class Obstacle : MonoBehaviour
         if (destroyOnTrigger)
             RemoveObstacle();
 
+        Debug.Log(other.gameObject.name);
+
         var player = PlayerManager.Instance.Player;
 
-        player.PlayDeathFeedback(other.transform.position, Quaternion.LookRotation(other.transform.forward));
+        player.PlayDeathFeedback();
 
         LevelManager.Instance.RestartLevel();
     }

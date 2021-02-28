@@ -1,6 +1,8 @@
 ﻿using Sirenix.Utilities;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -94,6 +96,17 @@ public static class Extensions
 
 public static class Utils
 {
+    [MenuItem("Fail/Clear Save Data")]
+    public static void ClearSaveData()
+    {
+        var filePath = Path.Combine(Application.persistentDataPath, Index.Instance.SaveFileName);
+
+        if (File.Exists(filePath))
+        {
+            File.Delete(filePath);
+        }
+    }
+
     public static bool IsPlayerGameObject(GameObject gameObject)
     {
         var player = gameObject.GetComponentInParent<PlayerController>();

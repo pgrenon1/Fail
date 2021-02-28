@@ -8,6 +8,7 @@ public class LevelManager : OdinSerializedSingletonBehaviour<LevelManager>
 {
     public LevelEndScreen levelEndScreen;
     public float levelEndShotDuration = 2f;
+    public float levelEndScreenDuration = 2f;
 
     public Level CurrentLevel { get; set; }
 
@@ -22,7 +23,7 @@ public class LevelManager : OdinSerializedSingletonBehaviour<LevelManager>
         //SceneManager.sceneLoaded += SceneManager_sceneLoaded;
     }
 
-    public void SetRecordTimeForCurrentLevel()
+    public void TrySetRecordTimeForCurrentLevel()
     {
         if (CurrentLevel != null)
         {
@@ -125,6 +126,7 @@ public class LevelManager : OdinSerializedSingletonBehaviour<LevelManager>
 
         InputManager.Instance.GameInputs.PlayerActions.Enable();
 
+        ResetTimer();
         StartTimer();
     }
 
@@ -139,15 +141,14 @@ public class LevelManager : OdinSerializedSingletonBehaviour<LevelManager>
     {
         StopTimer();
 
-        SetRecordTimeForCurrentLevel();
+        TrySetRecordTimeForCurrentLevel();
 
         // Disable Player's Inputs
         InputManager.Instance.GameInputs.PlayerActions.Disable();
 
         PlayerManager.Instance.Player.visualsParent.SetActive(false);
-        PlayerManager.Instance.Player.PlayDeathFeedback(PlayerManager.Instance.Player.transform.position, Quaternion.LookRotation(PlayerManager.Instance.Player.Rigidbody.velocity));
+        PlayerManager.Instance.Player.PlayDeathFeedback();
         PlayerManager.Instance.Player.Rigidbody.isKinematic = true;
-
 
         StartCoroutine(DoLevelEndSequence(levelEndCondition));
     }
@@ -159,16 +160,13 @@ public class LevelManager : OdinSerializedSingletonBehaviour<LevelManager>
             // ?
         }
 
-        ShowLevelCompletedScreen();
-
         yield return new WaitForSeconds(levelEndShotDuration);
 
-        GameManager.Instance.UnloadLevel();
-    }
-
-    private void ShowLevelCompletedScreen()
-    {
         levelEndScreen.Show(null);
+
+        yield return new WaitForSeconds(levelEndScreenDuration);
+
+        GameManager.Instance.UnloadLevel();
     }
 
     public void InitLevel()

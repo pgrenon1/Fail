@@ -25,9 +25,12 @@ public class Index : ScriptableObject
 		}
 	}
 
+	public string saveFileName = "save.json";
 	public IconDictionary iconDictionary;
 	public SceneIndex sceneIndex;
 
 	public IconDictionary IconDictionary { get { return iconDictionary; } }
 	public SceneIndex SceneIndex { get { return sceneIndex; } }
+	public string SaveFileName { get { return saveFileName; } }
+
 }

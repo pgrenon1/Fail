@@ -248,13 +248,13 @@ public class PlayerController : MonoBehaviour
         CinemachineFreeLook.transform.position = _initialFreeLookPosition;
     }
 
-    public void PlayDeathFeedback(Vector3 position, Quaternion rotation)
+    public void PlayDeathFeedback()
     {
         deathSFX.Play(true, true);
 
         if (deathVFXPrefab)
         {
-            var deathVFX = Instantiate(deathVFXPrefab, position, rotation);
+            Instantiate(deathVFXPrefab, transform.position, Quaternion.identity);
         }
     }
 

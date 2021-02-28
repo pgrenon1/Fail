@@ -3,14 +3,13 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 using Sirenix.OdinInspector;
+using Newtonsoft.Json;
 
 public class PersistenceManager : OdinSerializedSingletonBehaviour<PersistenceManager>
 {
-    private const string SAVEDATAPATH = "save.json";
-
     private SaveData _saveData;
 
-    private string PathName { get { return Path.Combine(Application.persistentDataPath, SAVEDATAPATH); } }
+    private string PathName { get { return Path.Combine(Application.persistentDataPath, Index.Instance.SaveFileName); } }
 
     protected override void Awake()
     {
@@ -23,8 +22,6 @@ public class PersistenceManager : OdinSerializedSingletonBehaviour<PersistenceMa
 
     private void Init()
     {
-        
-
         UnlockDefaultLevels();
     }
 
@@ -151,7 +148,7 @@ public class PersistenceManager : OdinSerializedSingletonBehaviour<PersistenceMa
 
     private void WriteSaveData()
     {
-        var jsonString = JsonUtility.ToJson(_saveData);
+        var jsonString = JsonConvert.SerializeObject(_saveData);
 
         if (!File.Exists(PathName))
         {
@@ -165,12 +162,12 @@ public class PersistenceManager : OdinSerializedSingletonBehaviour<PersistenceMa
 
     public SaveData DeserializeJson(string jsonString)
     {
-        return JsonUtility.FromJson<SaveData>(jsonString);
+        return JsonConvert.DeserializeObject<SaveData>(jsonString);
     }
 
     public string SerializeJson()
     {
-        return JsonUtility.ToJson(this);
+        return JsonConvert.SerializeObject(this);
     }
     #endregion
 }
