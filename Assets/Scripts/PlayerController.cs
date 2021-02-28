@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
     public GameObject visualsParent;
     public Sound jumpSFX;
     public Sound deathSFX;
-    public ParticleSystem deathVFX;
+    public ParticleSystem deathVFXPrefab;
     public ParticleSystem landingVFX;
 
     [Header("Pickup")]
@@ -248,12 +248,14 @@ public class PlayerController : MonoBehaviour
         CinemachineFreeLook.transform.position = _initialFreeLookPosition;
     }
 
-    public void PlayDeathFeedback(Quaternion rotation)
+    public void PlayDeathFeedback(Vector3 position, Quaternion rotation)
     {
         deathSFX.Play(true, true);
 
-        deathVFX.transform.rotation = rotation;
-        deathVFX.Play();
+        if (deathVFXPrefab)
+        {
+            var deathVFX = Instantiate(deathVFXPrefab, position, rotation);
+        }
     }
 
     private void OnDrawGizmos()

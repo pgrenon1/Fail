@@ -81,8 +81,6 @@ public class PlayerManager : OdinSerializedSingletonBehaviour<PlayerManager>
 
     public void ResetPlayer()
     {
-        Player.PlayDeathFeedback(Quaternion.LookRotation(Player.Rigidbody.velocity));
-
         TogglePlayerActive(false);
 
         TeleportToSpawnPoint();

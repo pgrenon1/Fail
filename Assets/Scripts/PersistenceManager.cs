@@ -18,7 +18,28 @@ public class PersistenceManager : OdinSerializedSingletonBehaviour<PersistenceMa
 
         LoadSaveData();
 
+        Init();
+    }
+
+    private void Init()
+    {
+        
+
         UnlockDefaultLevels();
+    }
+
+    public void SetLevelCompleted(LevelData levelData)
+    {
+        bool isDirty = false;
+        if (!_saveData.completedLevelsGUIDs.Contains(levelData.ID))
+        {
+            _saveData.completedLevelsGUIDs.Add(levelData.ID);
+
+            isDirty = true;
+        }
+
+        if (isDirty)
+            WriteSaveData();
     }
 
     public bool LevelIsCompleted(LevelData levelData)
@@ -88,6 +109,31 @@ public class PersistenceManager : OdinSerializedSingletonBehaviour<PersistenceMa
             WriteSaveData();
     }
 
+    public void SetLevelRecord(LevelData levelData, float time)
+    {
+        if (_saveData.levelTimeRecords.ContainsKey(levelData.ID))
+        {
+            _saveData.levelTimeRecords[levelData.ID] = time;
+        }
+        else
+        {
+            _saveData.levelTimeRecords.Add(levelData.ID, time);
+        }
+
+        WriteSaveData();
+    }
+
+    public bool GetLevelRecord(LevelData levelData, ref float record)
+    {
+        if (_saveData.levelTimeRecords.ContainsKey(levelData.ID))
+        {
+            record = _saveData.levelTimeRecords[levelData.ID];
+            return true;
+        }
+
+        return false;
+    }
+
     #region IO Stuff
     private void LoadSaveData()
     {
@@ -133,4 +179,5 @@ public class SaveData
 {
     public List<string> unlockedLevelsGUIDs = new List<string>();
     public List<string> completedLevelsGUIDs = new List<string>();
+    public Dictionary<string, float> levelTimeRecords = new Dictionary<string, float>(); 
 }

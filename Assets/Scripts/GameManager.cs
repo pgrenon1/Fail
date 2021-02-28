@@ -131,7 +131,7 @@ public class GameManager : OdinSerializedSingletonBehaviour<GameManager>
     {
         var buildIndex = SceneUtility.GetBuildIndexByScenePath(levelData.path);
 
-        StartCoroutine(DoLoadLevel(buildIndex, sceneToUnload));
+        StartCoroutine(DoLoadLevel(buildIndex, levelData, sceneToUnload));
     }
 
     /// <summary>
@@ -142,7 +142,7 @@ public class GameManager : OdinSerializedSingletonBehaviour<GameManager>
     /// 5. hide loading screen
     /// 6. start Level
     /// </summary>
-    public IEnumerator DoLoadLevel(int levelSceneBuildIndex, SceneNullable sceneToUnload = null)
+    public IEnumerator DoLoadLevel(int levelSceneBuildIndex, LevelData levelData, SceneNullable sceneToUnload = null)
     {
         // show loading screen
         yield return StartCoroutine(DoShowLoadingScreen());

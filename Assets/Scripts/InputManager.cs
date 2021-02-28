@@ -12,5 +12,7 @@ public class InputManager : OdinSerializedSingletonBehaviour<InputManager>
 
         GameInputs = new GameInputs();
         GameInputs.Enable();
+
+        GameInputs.PlayerActions.Disable();
     }
 }

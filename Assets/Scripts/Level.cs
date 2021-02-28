@@ -19,6 +19,11 @@ public class Level : OdinSerializedBehaviour
     public List<LevelEndConditionRuntime> LevelEndConditions { get; private set; } = new List<LevelEndConditionRuntime>();
 
     public bool HasEnded { get; private set; }
+    public bool IsStarted { get; private set; }
+    public LevelData LevelData { get; set; }
+    public float Record { get; set; }
+
+    private bool HasRecord = false;
 
     private void Start()
     {
@@ -29,6 +34,15 @@ public class Level : OdinSerializedBehaviour
 
     public void Init()
     {
+        LevelData = LevelManager.Instance.GetLevelDataForScene(gameObject.scene);
+
+        float record = 0f;
+        if (PersistenceManager.Instance.GetLevelRecord(LevelData, ref record))
+        {
+            Record = record;
+            HasRecord = true;
+        }
+
         InitLevelEndTriggers();
 
         foreach (var levelEndConditionData in levelEndConditionDatas)
@@ -58,6 +72,8 @@ public class Level : OdinSerializedBehaviour
 
     public void StartLevel()
     {
+        IsStarted = true;
+
         foreach (var levelEndCondition in LevelEndConditions)
         {
             levelEndCondition.Start();
@@ -88,6 +104,7 @@ public class Level : OdinSerializedBehaviour
 
     public void EndLevel(LevelEndConditionRuntime levelEndCondition)
     {
+        IsStarted = false;
         HasEnded = true;
         LevelManager.Instance.EndLevel(levelEndCondition);
     }

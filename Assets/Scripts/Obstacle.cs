@@ -30,7 +30,11 @@ public class Obstacle : MonoBehaviour
         if (destroyOnTrigger)
             RemoveObstacle();
 
-        PlayerManager.Instance.ResetPlayer();
+        var player = PlayerManager.Instance.Player;
+
+        player.PlayDeathFeedback(other.transform.position, Quaternion.LookRotation(other.transform.forward));
+
+        LevelManager.Instance.RestartLevel();
     }
 
     private void RemoveObstacle()
