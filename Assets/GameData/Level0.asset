@@ -22,9 +22,9 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   ID: 1c505df2-f4b7-48bb-aa3c-f848bbd74a6a
-  path: Assets/Scenes/Level0.unity
+  path: Assets/Scenes/Level12.unity
   isUnlockedByDefault: 1
-  title: Level 0
+  title: Level 12
   levelType: 1
   levelImage: {fileID: 3376461799764990963, guid: 1a8da56ccd652ea4aab0a5ba50427190,
     type: 3}
