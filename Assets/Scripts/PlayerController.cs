@@ -210,7 +210,12 @@ public class PlayerController : MonoBehaviour
     private void UpdateIsGrounded()
     {
         Ray ray = new Ray(transform.position, Vector3.down);
-        IsGrounded = Physics.SphereCast(ray, _capsuleCollider.radius, _capsuleCollider.height / 2f + extraDistanceToGround, LayerMaskManager.Instance.groundLayerMask);
+        IsGrounded = false;
+        RaycastHit[] hits = Physics.SphereCastAll(ray, _capsuleCollider.radius, _capsuleCollider.height / 2f + extraDistanceToGround, LayerMaskManager.Instance.groundCheckLayerMask);
+        if (hits.Length > 0 && LayerMaskManager.Instance.groundLayerMask == (LayerMaskManager.Instance.groundLayerMask | (1 << hits[0].collider.gameObject.layer)))
+        {
+              IsGrounded = true;
+        }
     }
 
     private void FixedUpdateMovement()

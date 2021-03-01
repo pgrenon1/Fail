@@ -5,4 +5,5 @@ using UnityEngine;
 public class LayerMaskManager : OdinSerializedSingletonBehaviour<LayerMaskManager>
 {
     public LayerMask groundLayerMask;
+    public LayerMask groundCheckLayerMask;
 }
